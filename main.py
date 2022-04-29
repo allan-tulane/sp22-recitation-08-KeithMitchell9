@@ -1,25 +1,23 @@
 from collections import defaultdict
 
 def make_undirected_graph(edge_list):
-    """ Makes an undirected graph from a list of edge tuples. """
-    graph = defaultdict(set)
-    for e in edge_list:
-        graph[e[0]].add(e[1])
-        graph[e[1]].add(e[0])
-    return graph
+  graph = defaultdict(set)
+  for e in edge_list:
+    graph[e[0]].add(e[1])
+    graph[e[1]].add(e[0])
+  return graph
 
 
 def reachable(graph, start_node):
-    """
-    Returns:
-      the set of nodes reachable from start_node
-    """
-    result = set([start_node])
-    frontier = set([start_node])
-    while len(frontier) != 0:
-        ###TODO
-        pass
-    return result
+  result = set([start_node])
+  frontier = set([start_node])
+  while len(frontier) != 0:
+    x = frontier.popleft()
+    for i in graph[x]:
+      if i not in result:
+        result.add(i)
+        frontier.add(i)
+  return result
 
 def test_reachable():
     graph = make_undirected_graph([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'B')])
@@ -33,8 +31,10 @@ def test_reachable():
 
 
 def connected(graph):
-    ### TODO
-    pass
+  if (len(graph) != len(reachable(graph, next(iter(graph))))):
+    return False
+  else:
+    return True
 
 def test_connected():
     graph = make_undirected_graph([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'B')])
@@ -45,12 +45,20 @@ def test_connected():
 
 
 def n_components(graph):
-    """
-    Returns:
-      the number of connected components in an undirected graph
-    """
-    ### TODO
-    pass
+  result = []
+  length = []
+  if connected(graph):
+    return 1
+  else:
+    for key in graph.keys():
+      length.append(len(reachable(graph, key)))
+    for element in length:
+      if element in result:
+        continue
+      else:
+        result.append(element)
+  return len(result)
+
 
 def test_n_components():
     graph = make_undirected_graph([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'B')])
